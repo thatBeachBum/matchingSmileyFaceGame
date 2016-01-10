@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Matching Smiley Game</title>
+	<style type="text/css">
+		#rightSide { left: 500px; border-left: 1px solid black }
+        div {width:500px; height:500px; position:absolute}
+        img {position:absolute}
+        h1 {color:coral; font-family: Courier New}
+        p {color:coral; font-family: Courier New}
+        body {background-color: lightgreen}
+   	</style>
+</head>
+<body onload="generateFaces()">
+    <h1>Matching Game</h1>
+    <p>Click on the extra smiling face on the left.</p>
+    <div id="leftSide"></div>
+    <div id="rightSide"></div>
+
+    <script>
+        // variables
+        var numberOfFaces = 5;
+        var theLeftSide = document.getElementById("leftSide");
+        var theRightSide = document.getElementById("rightSide");
+        var theBody = document.getElementsByTagName("body")[0]
+
+        // main function: create images in the both divs
+        function generateFaces() {
+            for(var i = 0; i < numberOfFaces; i++) {
+                var newItem = document.createElement("img");
+                theLeftSide.appendChild(newItem);
+                newItem.setAttribute("src","http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png");
+                var left = Math.floor(Math.random() * 401);
+                var top = Math.floor(Math.random() * 401);
+                newItem.setAttribute("style", "left:"+left+"px; top:"+top+"px;");
+            }
+            
+            // clone the left side on the right
+            makeRightSide();
+
+            theLeftSide.lastChild.onclick = function nextLevel(event){event.stopPropagation();
+            	numberOfFaces += 5;
+            	reset();
+            	generateFaces();
+            };
+            
+            theBody.onclick = function gameOver() {
+                alert("Game Over!" + "\n\nPress OK to play again");
+                theBody.onclick = null;
+                theLeftSide.lastChild.onclick = null;
+                location.reload();
+            };
+        }
+        
+        // clone function
+        function makeRightSide() {
+            var leftSideImages = theLeftSide.cloneNode(true);
+            leftSideImages.removeChild(leftSideImages.lastChild);
+			theRightSide.appendChild(leftSideImages);
+        }
+        
+        // clear function
+        function reset() {
+            while (theLeftSide.firstChild) 
+                theLeftSide.removeChild(theLeftSide.firstChild);
+            while (theRightSide.firstChild) 
+                theRightSide.removeChild(theRightSide.firstChild);
+        }
+    </script>
+</body>
+</html>
